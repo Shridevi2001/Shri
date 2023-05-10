@@ -1,0 +1,39 @@
+import time
+from pylogix import PLC
+
+import pymongo
+from pylogix import PLC
+
+client = client=pymongo.MongoClient("mongodb://localhost:27017/")
+
+databaselist = client.list_database_names()
+
+if "TR6pro1" in databaselist:
+    print("databasse exist")
+
+else:
+    databasename = client["TR6pro1"]
+    collection = databasename.create_collection("Status")
+    document = {"_id":"12345"}
+    collection.insert_one(document)
+
+databasename = client["TR6pro1"]
+x = databasename.get_collection("Status")
+x1 = databasename.get_collection("Alarams")
+
+def read(tag):
+    val = comm.Read(tag)
+    return val
+
+global comm
+comm = PLC()
+comm.IPAddress = "192.168.3.101"
+def main():
+        while True:
+            v = read(["l_int","l_int.0","l_int.1","l_int.2","l_int.3","l_int.4","l_int.5","l_int.6","l_int.7","l_int.8","l_int.9","l_int.10","l_int.11","l_int.12","l_int.13","l_int.14","l_int.15","l_int.16","l_int.17","l_int.18","l_int.19","l_int.20","l_int.21","l_int.22","l_int.23","l_int.24","l_int.25","l_int.26","l_int.27","l_int.28","l_int.29","l_int.30","l_int.31"])
+            x.update_one({"_id":"12345"},{"$set":{"l_int_0":v[0].Value,"l_int_1":v[1].Value,"l_int_2":v[2].Value,"l_int_3":v[3].Value,"l_int_4":v[4].Value,"l_int_5":v[5].Value,"l_int_6":v[6].Value,"l_int_7":v[7].Value,"l_int_8":v[8].Value,"l_int_9":v[9].Value,"l_int_10":v[10].Value,"l_int_11":v[11].Value,"l_int_12":v[12].Value,"l_int_13":v[13].Value,"l_int_14":v[14].Value,"l_int_15":v[15].Value,"l_int_16":v[16].Value,"l_int_17":v[17].Value,"l_int_18":v[18].Value}})
+            print(v[0].Value)
+
+if __name__ == "__main__":
+     print("entering in to main")
+     main()
